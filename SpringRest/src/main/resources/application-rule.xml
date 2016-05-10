@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+
+	<context:component-scan base-package="io.egen" />
+	<!--Test Data  -->
+	<bean id="person1" class="io.egen.domain.Person">
+		<property name="weight">
+			<value>20</value>
+		</property>
+	</bean>
+
+	<bean id="person2" class="io.egen.domain.Person">
+		<property name="weight">
+			<value>50</value>
+		</property>
+	</bean>
+
+
+	<!-- configure rule -->
+	<!--Test Data  -->
+	<bean id="underWeightRule" class="io.egen.rule.UnderWeightRule">
+		<constructor-arg ref="person1" />
+	</bean>
+	<bean id="overWeightRule" class="io.egen.rule.OverWeightRule">
+		<constructor-arg ref="person2" />
+	</bean>
+
+	<!-- configure rules engine -->
+	<bean id="rulesEngine" class="org.easyrules.spring.RulesEngineFactoryBean">
+
+	</bean>
+
+<!-- Test Data -->
+	<bean id="testrulesEngine" class="org.easyrules.spring.RulesEngineFactoryBean">
+		<property name="rules">
+			<list>
+
+				<ref bean="underWeightRule" />
+				<ref bean="overWeightRule" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="metricService" class="io.egen.service.MetricServiceImpl">
+		<property name="rulesEngine" ref="rulesEngine" />
+	</bean>
+</beans>
